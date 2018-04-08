@@ -32,8 +32,8 @@ Function Invoke-Logger {
         [ValidateSet("unicode", "utf7", "utf8", "utf32", "ascii", "bigendianunicode", "default", "oem")]
         [string]$Encoding = "default"
     )
-    if ($LogFile -eq $null) { throw "Specify output logfile path in the `$Global:LogFile" }
-    if (-not (Test-Path $LogFile)) { throw "Specify output logfile path in the `$Global:LogFile" }
+    if (-not $vanish -and $LogFile -eq "") { throw "Specify output logfile path in the `$Global:LogFile" }
+    if (-not $vanish -and -not (Test-Path $LogFile)) { throw "Specify output logfile path in the `$Global:LogFile" }
 
     if (-not $FullName) { $Source = Split-Path -Leaf $Source }
 
