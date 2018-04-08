@@ -11,6 +11,9 @@ Function Invoke-Logger {
         [string]$Err,
 
         [Parameter(Mandatory=$False)]
+        [string]$Source = $MyInvocation.ScriptName,
+
+        [Parameter(Mandatory=$False)]
         [string]$Delimiter = "`t",
 
         [Parameter(Mandatory=$False)]
@@ -27,17 +30,16 @@ Function Invoke-Logger {
     if (-not (Test-Path $LogFile)) { throw "Specify output logfile path in the `$Global:LogFile" }
 
     $datetime = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-    $source = $MyInvocation.ScriptName
     if ($Info) {
-        $Message = $datetime,"Information",$source,$Information -join $Delimiter
+        $Message = $datetime,"Information",$Source,$Information -join $Delimiter
         if (-not $silent) { Write-Output $Message }
     }
     if ($Warn) {
-        $Message = $datetime,"Warning",$source,$Warn -join $Delimiter
+        $Message = $datetime,"Warning",$Source,$Warn -join $Delimiter
         if (-not $silent) { Write-Warning $Message }
     }
     if ($Err) {
-        $Message = $datetime,"Error",$source,$Err -join $Delimiter
+        $Message = $datetime,"Error",$Source,$Err -join $Delimiter
         if (-not $silent) { Write-Error $Message -ErrorAction "Continue" }
     }
     Write-Output $Message | Out-File -Append -Encoding $Encoding -FilePath $LogFile
