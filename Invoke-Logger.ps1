@@ -31,7 +31,7 @@ Function Invoke-Logger {
 
     $datetime = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
     if ($Info) {
-        $Message = $datetime,"Information",$Source,$Information -join $Delimiter
+        $Message = $datetime,"Information",$Source,$Info -join $Delimiter
         if (-not $silent) { Write-Output $Message }
     }
     if ($Warn) {
