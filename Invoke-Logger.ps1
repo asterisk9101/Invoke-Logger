@@ -35,18 +35,9 @@ Function Invoke-Logger {
     if (-not $FullName) { $Source = Split-Path -Leaf $Source }
 
     $datetime = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-    if ($Info) {
-        $Message = $datetime,"Information",$Source,$Info -join $Delimiter
-        if (-not $silent) { Write-Output $Message }
-    }
-    if ($Warn) {
-        $Message = $datetime,"Warning",$Source,$Warn -join $Delimiter
-        if (-not $silent) { Write-Warning $Message }
-    }
-    if ($Err) {
-        $Message = $datetime,"Error",$Source,$Err -join $Delimiter
-        if (-not $silent) { Write-Error $Message -ErrorAction "Continue" }
-    }
+    if ($Info) { $Message = $datetime,"Information",$Source,$Info -join $Delimiter; if (-not $Silent) { Write-Output  $Message } }
+    if ($Warn) { $Message = $datetime,"Warning",    $Source,$Warn -join $Delimiter; if (-not $Silent) { Write-Warning $Message } }
+    if ($Err)  { $Message = $datetime,"Error",      $Source,$Err  -join $Delimiter; if (-not $Silent) { Write-Error   $Message -ErrorAction "Continue" } }
     Write-Output $Message | Out-File -Append -Encoding $Encoding -FilePath $LogFile
 }
 Set-Alias -Name logger -Value Invoke-Logger
