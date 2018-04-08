@@ -1,13 +1,13 @@
 Function Invoke-Logger {
     [cmdletbinding(DefaultParameterSetName="Information")]
     param(
-        [Parameter(Mandatory=$True,ParameterSetName="Information")]
+        [Parameter(Mandatory=$True,ParameterSetName="Information",Position=0)]
         [string]$Info,
 
-        [Parameter(Mandatory=$True,ParameterSetName="Warning")]
+        [Parameter(Mandatory=$True,ParameterSetName="Warning",Position=0)]
         [string]$Warn,
 
-        [Parameter(Mandatory=$True,ParameterSetName="Error")]
+        [Parameter(Mandatory=$True,ParameterSetName="Error",Position=0)]
         [string]$Err,
 
         [Parameter(Mandatory=$False)]
