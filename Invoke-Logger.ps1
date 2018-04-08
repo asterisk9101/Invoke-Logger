@@ -1,16 +1,17 @@
 Function Invoke-Logger {
-    [cmdletbinding()]
+    [cmdletbinding(DefaultParameterSetName="Information")]
     param(
-        [Parameter(Mandatory=$True)]
-        [ValidateSet("Information", "Warning", "Error")]
-        [string]$Type,
+        [Parameter(Mandatory=$True,ParameterSetName="Information")]
+        [string]$Info,
 
-        [Parameter(Mandatory=$True)]
-        [ValidatePattern('^[^ ]*$')]
-        [string]$Source,
+        [Parameter(Mandatory=$True,ParameterSetName="Warning")]
+        [string]$Warn,
 
-        [Parameter(Mandatory=$True)]
-        [string]$Message,
+        [Parameter(Mandatory=$True,ParameterSetName="Error")]
+        [string]$Err,
+
+        [Parameter(Mandatory=$False)]
+        [string]$Delimiter = "`t",
 
         [Parameter(Mandatory=$False)]
         [switch]$Silent,
@@ -26,22 +27,19 @@ Function Invoke-Logger {
     if (-not (Test-Path $LogFile)) { throw "Specify output logfile path in the `$Global:LogFile" }
 
     $datetime = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-    switch($Type){
-        "Information" {
-            $Message = "$datetime Information $source $message"
-            if (-not $silent) { Write-Output $Message }
-            Write-Output $Message | Out-File -Append -Encoding $Encoding -FilePath $LogFile
-        }
-        "Warning" {
-            $Message = "$datetime Warning     $source $message"
-            if (-not $silent) { Write-Warning $Message }
-            Write-Output $Message | Out-File -Append -Encoding $Encoding -FilePath $LogFile
-        }
-        "Error" {
-            $Message = "$datetime Error       $source $message"
-            if (-not $silent) { Write-Error $Message -ErrorAction "continue" }
-            Write-Output $Message | Out-File -Append -Encoding $Encoding -FilePath $LogFile
-        }
+    $source = $MyInvocation.ScriptName
+    if ($Info) {
+        $Message = $datetime,"Information",$source,$Information -join $Delimiter
+        if (-not $silent) { Write-Output $Message }
     }
+    if ($Warn) {
+        $Message = $datetime,"Warning",$source,$Warn -join $Delimiter
+        if (-not $silent) { Write-Warning $Message }
+    }
+    if ($Err) {
+        $Message = $datetime,"Error",$source,$Err -join $Delimiter
+        if (-not $silent) { Write-Error $Message -ErrorAction "Continue" }
+    }
+    Write-Output $Message | Out-File -Append -Encoding $Encoding -FilePath $LogFile
 }
 Set-Alias -Name logger -Value Invoke-Logger
