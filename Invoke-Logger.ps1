@@ -17,6 +17,9 @@ Function Invoke-Logger {
         [string]$Delimiter = "`t",
 
         [Parameter(Mandatory=$False)]
+        [switch]$FullName,
+
+        [Parameter(Mandatory=$False)]
         [switch]$Silent,
 
         [parameter(Mandatory=$False)]
@@ -28,6 +31,8 @@ Function Invoke-Logger {
     )
     if ($LogFile -eq $null) { throw "Specify output logfile path in the `$Global:LogFile" }
     if (-not (Test-Path $LogFile)) { throw "Specify output logfile path in the `$Global:LogFile" }
+
+    if (-not $FullName) { $Source = Split-Path -Leaf $Source }
 
     $datetime = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
     if ($Info) {
