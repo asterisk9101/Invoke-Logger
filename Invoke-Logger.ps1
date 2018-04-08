@@ -22,6 +22,9 @@ Function Invoke-Logger {
         [Parameter(Mandatory=$False)]
         [switch]$Silent,
 
+        [Parameter(Mandatory=$False)]
+        [switch]$Vanish,
+
         [parameter(Mandatory=$False)]
         [string]$LogFile = $Global:LogFile,
 
@@ -38,6 +41,6 @@ Function Invoke-Logger {
     if ($Info) { $Message = $datetime,"Information",$Source,$Info -join $Delimiter; if (-not $Silent) { Write-Output  $Message } }
     if ($Warn) { $Message = $datetime,"Warning",    $Source,$Warn -join $Delimiter; if (-not $Silent) { Write-Warning $Message } }
     if ($Err)  { $Message = $datetime,"Error",      $Source,$Err  -join $Delimiter; if (-not $Silent) { Write-Error   $Message -ErrorAction "Continue" } }
-    Write-Output $Message | Out-File -Append -Encoding $Encoding -FilePath $LogFile
+    if (-not $Vanish) { Write-Output $Message | Out-File -Append -Encoding $Encoding -FilePath $LogFile }
 }
 Set-Alias -Name logger -Value Invoke-Logger
