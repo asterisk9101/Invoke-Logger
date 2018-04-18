@@ -32,11 +32,11 @@ $Global:LoggerActionPreference = New-LoggerConfig `
     -Delimiter "," `
     -LogFormat {
         param($DateTime, $Source, $Level, $Message, $Delimiter)
-        if ($Level -eq "Info") { $Level = "?" }
-        if ($Level -eq "Warn") { $Level = "?" }
-        if ($Level -eq "Error"){ $Level = "?" }
+        if ($Level -eq "Info") { $Level = "😁" }
+        if ($Level -eq "Warn") { $Level = "😅" }
+        if ($Level -eq "Error"){ $Level = "😱" }
         $DateTime, "?", $Level, $Message -join $Delimiter
-        # => 2018-04-01,?,?,Advanced Hello Logger!
+        # => 2018-04-01,❤,😱,Advanced Hello Logger!
     }
 
 logger -Err "Advanced Hello logger!"
