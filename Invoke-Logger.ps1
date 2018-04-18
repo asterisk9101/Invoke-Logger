@@ -1,46 +1,49 @@
 Function Invoke-Logger {
     [cmdletbinding(DefaultParameterSetName="Information")]
     param(
-        [Parameter(Mandatory=$True,ParameterSetName="Information",Position=0)]
+        [Parameter(Mandatory=$True,ParameterSetName="Information")]
         [string]$Info,
 
-        [Parameter(Mandatory=$True,ParameterSetName="Warning",Position=0)]
+        [Parameter(Mandatory=$True,ParameterSetName="Warning")]
         [string]$Warn,
 
-        [Parameter(Mandatory=$True,ParameterSetName="Error",Position=0)]
+        [Parameter(Mandatory=$True,ParameterSetName="Error")]
         [string]$Err,
 
         [Parameter(Mandatory=$False)]
-        [string]$Source = $MyInvocation.ScriptName,
-
-        [Parameter(Mandatory=$False)]
-        [string]$Delimiter = "`t",
-
-        [Parameter(Mandatory=$False)]
-        [switch]$FullName,
-
-        [Parameter(Mandatory=$False)]
-        [switch]$Silent,
-
-        [Parameter(Mandatory=$False)]
-        [switch]$Vanish,
-
-        [parameter(Mandatory=$False)]
-        [string]$LogFile = $Global:LogFile,
-
-        [parameter(Mandatory=$False)]
-        [ValidateSet("unicode", "utf7", "utf8", "utf32", "ascii", "bigendianunicode", "default", "oem")]
-        [string]$Encoding = "default"
+        [string]$Source = $MyInvocation.ScriptName
     )
-    if (-not $vanish -and $LogFile -eq "") { throw "Specify output logfile path in the `$Global:LogFile" }
-    if (-not $vanish -and -not (Test-Path $LogFile)) { throw "Specify output logfile path in the `$Global:LogFile" }
+    # Default Parameter
+    $LogFormat = {
+        param($DateTime, $Source, $Level, $Message, $Delimiter)
+        $DateTime, $Env:ComputerName, $Env:UserName, $Source, $Level, $Message -join $Delimiter
+    }
+    $DateTimeFormat = "yyyy-MM-dd HH:mm:ss"
+    $Delimiter = "`t"
+    $FullName = $False
+    $Action = { Write-Output $_ }
 
-    if (-not $FullName) { $Source = Split-Path -Leaf $Source }
+    # Preference Parameter
+    if ($Global:LoggerActionPreference) {
+        $config = $Global:LoggerActionPreference
+        if ($config.File          ) { $Action         = { $_ | Out-File -Append $config.File } }
+        if ($config.Action        ) { $Action         = $config.Action }
+        if ($config.LogFormat     ) { $LogFormat      = $config.LogFormat }
+        if ($config.DateTimeFormat) { $DateTimeFormat = $config.DateTimeFormat }
+        if ($config.Delimiter     ) { $Delimiter      = $config.Delimiter }
+        if ($config.FullName      ) { $FullName       = $config.FullName }
+    }
 
-    $datetime = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-    if ($Info) { $Message = $datetime,"Information",$Source,$Info -join $Delimiter; if (-not $Silent) { Write-Output  $Message } }
-    if ($Warn) { $Message = $datetime,"Warning",    $Source,$Warn -join $Delimiter; if (-not $Silent) { Write-Warning $Message } }
-    if ($Err)  { $Message = $datetime,"Error",      $Source,$Err  -join $Delimiter; if (-not $Silent) { Write-Error   $Message -ErrorAction "Continue" } }
-    if (-not $Vanish) { Write-Output $Message | Out-File -Append -Encoding $Encoding -FilePath $LogFile }
+    # Build Message
+    $DateTime = Get-Date -Format $DateTimeFormat
+    if ($Source -and -not $FullName) { $Source = Split-Path -Leaf $Source }
+    if (-not $Source) { $Source = "Console" }
+    if ($Info) { $Level = "Info"; $Message = $Info }
+    if ($Warn) { $Level = "Warn"; $Message = $Warn }
+    if ($Err)  { $Level = "Error"; $Message = $Err }
+    $Log = & $LogFormat -DateTime $DateTime -Source $Source -Level $Level -Message $Message -Delimiter $Delimiter
+
+    # Logging Action
+    $Log | ForEach-Object $Action
 }
 Set-Alias -Name logger -Value Invoke-Logger
