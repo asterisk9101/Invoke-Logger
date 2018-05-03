@@ -37,9 +37,6 @@ Function Invoke-Logger {
             if ($config.Delimiter     ) { $Delimiter      = $config.Delimiter }
             if ($config.FullName      ) { $FullName       = $config.FullName }
         }
-        $DateTime = Get-Date -Format $DateTimeFormat
-        if ($Source -and -not $FullName) { $Source = Split-Path -Leaf $Source }
-        if (-not $Source) { $Source = "Console" }
         $buf = New-Object System.Text.StringBuilder
     }
     process {
@@ -49,6 +46,9 @@ Function Invoke-Logger {
     }
     end {
         # Build Message
+        $DateTime = Get-Date -Format $DateTimeFormat
+        if ($Source -and -not $FullName) { $Source = Split-Path -Leaf $Source }
+        if (-not $Source) { $Source = "Console" }
         if ($Info) { $Level = "Info" }
         if ($Warn) { $Level = "Warn" }
         if ($Err)  { $Level = "Error" }
