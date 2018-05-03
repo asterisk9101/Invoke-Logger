@@ -13,6 +13,9 @@ Describe "Invoke-Logger" {
         It "Error レベルのメッセージが出力される" {
             Invoke-Logger -Err "Message" | Should -Match "Error"
         }
+        It "Source の既定値のスクリプト名が出力される" {
+            Invoke-Logger -Info "Message" | Should -Match "Invoke-Logger.Tests.ps1"
+        }
         It "Source が指定できる" {
             Invoke-Logger -Info "Message" -Source "Logger" | Should -Match "Logger"
         }
