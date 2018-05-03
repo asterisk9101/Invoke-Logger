@@ -31,13 +31,13 @@ Function Invoke-Logger {
         $Action = { Write-Output $_ }
 
         # Preference Parameter
-        if ($config) {
-            if ($config.File          ) { $Action         = { $_ | Out-File -Append $config.File; return $_ } }
-            if ($config.Action        ) { $Action         = $config.Action }
-            if ($config.LogFormat     ) { $LogFormat      = $config.LogFormat }
-            if ($config.DateTimeFormat) { $DateTimeFormat = $config.DateTimeFormat }
-            if ($config.Delimiter     ) { $Delimiter      = $config.Delimiter }
-            if ($config.FullName      ) { $FullName       = $config.FullName }
+        if ($Config) {
+            if ($Config.File          ) { $Action         = { $_ | Out-File -Append $Config.File; return $_ } }
+            if ($Config.Action        ) { $Action         = $Config.Action }
+            if ($Config.LogFormat     ) { $LogFormat      = $Config.LogFormat }
+            if ($Config.DateTimeFormat) { $DateTimeFormat = $Config.DateTimeFormat }
+            if ($Config.Delimiter     ) { $Delimiter      = $Config.Delimiter }
+            if ($Config.FullName      ) { $FullName       = $Config.FullName }
         }
         $buf = New-Object System.Text.StringBuilder
     }
