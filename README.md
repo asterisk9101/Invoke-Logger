@@ -7,7 +7,6 @@ load ps1
 . .\New-LoggerConfig.ps1
 ```
 
-
 ## Basic usage
 
 ```ps1
@@ -16,6 +15,10 @@ $Global:LoggerActionPreference = New-LoggerConfig -File Log.txt
 
 # available alias
 logger -Info "Hello logger!"
+
+# available stdin
+echo "Hello logger stdin!" | logger -Info
+
 ```
 
 ## Advanced usage
