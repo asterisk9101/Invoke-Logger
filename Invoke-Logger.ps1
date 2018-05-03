@@ -22,7 +22,7 @@ Function Invoke-Logger {
             param($DateTime, $Source, $Level, $Message, $Delimiter)
             $DateTime, $Env:ComputerName, $Env:UserName, $Source, $Level, $Message -join $Delimiter
         }
-        $DateTimeFormat = "yyyy-MM-dd HH:mm:ss"
+        $DateTimeFormat = "yyyy-MM-dd HH:mm:ss.fff"
         $Delimiter = "`t"
         $FullName = $False
         $Action = { Write-Output $_ }
@@ -30,7 +30,7 @@ Function Invoke-Logger {
         # Preference Parameter
         if ($Global:LoggerActionPreference) {
             $config = $Global:LoggerActionPreference
-            if ($config.File          ) { $Action         = { $_ | Out-File -Append $config.File } }
+            if ($config.File          ) { $Action         = { $_ | Out-File -Append $config.File; return $_ } }
             if ($config.Action        ) { $Action         = $config.Action }
             if ($config.LogFormat     ) { $LogFormat      = $config.LogFormat }
             if ($config.DateTimeFormat) { $DateTimeFormat = $config.DateTimeFormat }
