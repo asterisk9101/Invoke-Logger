@@ -3,32 +3,32 @@ $sut = (Split-Path -Leaf $MyInvocation.MyCommand.Path) -replace '\.Tests\.', '.'
 . "$here\$sut"
 
 Describe "Invoke-Logger" {
-    Context "åŸºæœ¬çš„ãªæ©Ÿèƒ½" {
-        It "Information ãƒ¬ãƒ™ãƒ«ã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãŒå‡ºåŠ›ã•ã‚Œã‚‹" {
+    Context "Šî–{“I‚È‹@”\" {
+        It "Information ƒŒƒxƒ‹‚ÌƒƒbƒZ[ƒW‚ªo—Í‚³‚ê‚é" {
             Invoke-Logger -Info "Message" | Should -Match "Info"
         }
-        It "Warning ãƒ¬ãƒ™ãƒ«ã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãŒå‡ºåŠ›ã•ã‚Œã‚‹" {
+        It "Warning ƒŒƒxƒ‹‚ÌƒƒbƒZ[ƒW‚ªo—Í‚³‚ê‚é" {
             Invoke-Logger -Warn "Message" | Should -Match "Warn"
         }
-        It "Error ãƒ¬ãƒ™ãƒ«ã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãŒå‡ºåŠ›ã•ã‚Œã‚‹" {
+        It "Error ƒŒƒxƒ‹‚ÌƒƒbƒZ[ƒW‚ªo—Í‚³‚ê‚é" {
             Invoke-Logger -Err "Message" | Should -Match "Error"
         }
-        It "Source ãŒæŒ‡å®šã§ãã‚‹" {
+        It "Source ‚ªw’è‚Å‚«‚é" {
             Invoke-Logger -Info "Message" -Source "Logger" | Should -Match "Logger"
         }
-        It "logger ã‚¨ã‚¤ãƒªã‚¢ã‚¹ãŒä½¿ãˆã‚‹" {
+        It "logger ƒGƒCƒŠƒAƒX‚ªg‚¦‚é" {
             logger -Info "Message" | Should -Match "Message"
         }
-        It "ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³å…¥åŠ›ãŒã§ãã‚‹" {
+        It "ƒpƒCƒvƒ‰ƒCƒ““ü—Í‚ª‚Å‚«‚é" {
             Write-Output "Message" | logger -Info | Should -Match "Message"
         }
-        It "è¤‡æ•°ã®å…¥åŠ›ã‚’1è¡Œã«é›†ç´„ã—ã¦å‡ºåŠ›ã™ã‚‹" {
+        It "•¡”‚Ì“ü—Í‚ğ1s‚ÉW–ñ‚µ‚Äo—Í‚·‚é" {
             $Messages = Write-Output "Message1", "Message2`r`nMessage3" | logger -info
             $Messages | % { $_ -split '[\r\n]' } | Measure-Object | Select-Object -ExpandProperty count | Should -Be 1
         }
     }
-    Context "ã‚¨ãƒ©ãƒ¼å‡¦ç†" {
-        It "ãƒ¬ãƒ™ãƒ«ãŒæŒ‡å®šã•ã‚Œã¦ã„ãªã„å ´åˆã¯ã‚¨ãƒ©ãƒ¼ã«ãªã‚‹" {
+    Context "ƒGƒ‰[ˆ—" {
+        It "ƒŒƒxƒ‹‚ªw’è‚³‚ê‚Ä‚¢‚È‚¢ê‡‚ÍƒGƒ‰[‚É‚È‚é" {
             { logger "hoge" } | Should -Throw
         }
     }

@@ -55,17 +55,8 @@ Function Invoke-Logger {
         $Message = $buf.ToString() -replace '[\r\n]',' '
         $Log = & $LogFormat -DateTime $DateTime -Source $Source -Level $Level -Message $Message -Delimiter $Delimiter
 
-    # Build Message
-    $DateTime = Get-Date -Format $DateTimeFormat
-    if ($Source -and -not $FullName) { $Source = Split-Path -Leaf $Source }
-    if (-not $Source) { $Source = "Console" }
-    if ($Info) { $Level = "Info"; $Message = $Info }
-    if ($Warn) { $Level = "Warn"; $Message = $Warn }
-    if ($Err)  { $Level = "Error"; $Message = $Err }
-    $Log = & $LogFormat -DateTime $DateTime -Source $Source -Level $Level -Message $Message -Delimiter $Delimiter
-
-    # Logging Action
-    $Log | ForEach-Object $Action
+        # Logging Action
+        $Log | ForEach-Object $Action
     }
 }
 Set-Alias -Name logger -Value Invoke-Logger
