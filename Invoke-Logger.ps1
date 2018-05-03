@@ -14,7 +14,10 @@ Function Invoke-Logger {
         [string[]]$Messages,
         
         [Parameter(Mandatory=$False,Position=3)]
-        [string]$Source = $MyInvocation.ScriptName
+        [string]$Source = $MyInvocation.ScriptName,
+
+        [Parameter(Mandatory=$False,Position=4)]
+        [Object]$Config = $Global:LoggerActionPreference
     )
     begin {
         # Default Parameter
@@ -28,8 +31,7 @@ Function Invoke-Logger {
         $Action = { Write-Output $_ }
 
         # Preference Parameter
-        if ($Global:LoggerActionPreference) {
-            $config = $Global:LoggerActionPreference
+        if ($config) {
             if ($config.File          ) { $Action         = { $_ | Out-File -Append $config.File; return $_ } }
             if ($config.Action        ) { $Action         = $config.Action }
             if ($config.LogFormat     ) { $LogFormat      = $config.LogFormat }

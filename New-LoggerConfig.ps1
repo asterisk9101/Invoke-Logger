@@ -1,10 +1,10 @@
 Function New-LoggerConfig {
     [cmdletbinding()]
     Param(
-        [Parameter(Mandatory=$False,ParameterSetName="File")]
+        [Parameter(Mandatory=$False)]
         [String]$File,
 
-        [Parameter(Mandatory=$False,ParameterSetName="Action")]
+        [Parameter(Mandatory=$False)]
         [Scriptblock]$Action,
 
         [Parameter(Mandatory=$False)]
